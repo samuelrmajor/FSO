@@ -9,7 +9,8 @@ const Button = ({ handleClick, text }) => (
 
 const Statistics = ({bad,neutral,good}) => {
 
-  if (bad + neutral + good === 0) return (
+  if (bad + neutral + good === 0) 
+  return (
     <div>
       No Feedback Given
     </div>
@@ -17,17 +18,42 @@ const Statistics = ({bad,neutral,good}) => {
 
   return (
     <div>
-      Good: {good} <br />
-      Neutral: {neutral} <br />
-      Bad: {bad} <br />
-      All: {neutral+bad+good} <br />
-      Average: {(good-bad)/(good+bad+neutral)} <br />
-      Positive: {100*good/(good+bad+neutral)} %<br />
+      <table>
+        <tbody>
+            <StatisticLine text = "Good" value = {good}/>
+            <StatisticLine text = "Neutral" value = {neutral} />
+            <StatisticLine text = "Bad" value = {bad} />
+            <StatisticLine text = "All" value = {neutral+bad+good} />
+            <StatisticLine text = "Average" value = {(good-bad)/(good+bad+neutral)} />
+            <StatisticLine text = "Positive" value = {100*good/(good+bad+neutral)} nopercent = {false}/>
+        </tbody>
+      </table> 
     </div>
   )
 
 
 }
+
+const StatisticLine = ({value, text, nopercent = true}) => {
+
+if (nopercent)
+return (
+  
+    <tr>
+      <td>{text}</td>
+      <td>{Math.round(value * 10) / 10}</td>
+    </tr>
+  )
+
+return (
+    <tr>
+      <td>{text}</td>
+      <td>{Math.round(value * 10) / 10} %</td>
+    </tr>
+    )
+
+}
+
 
 
 const App = () => {
