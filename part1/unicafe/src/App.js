@@ -9,6 +9,12 @@ const Button = ({ handleClick, text }) => (
 
 const Statistics = ({bad,neutral,good}) => {
 
+  if (bad + neutral + good === 0) return (
+    <div>
+      No Feedback Given
+    </div>
+  )
+
   return (
     <div>
       Good: {good} <br />
@@ -16,7 +22,7 @@ const Statistics = ({bad,neutral,good}) => {
       Bad: {bad} <br />
       All: {neutral+bad+good} <br />
       Average: {(good-bad)/(good+bad+neutral)} <br />
-      Good: {good/(good+bad+neutral)} <br />
+      Positive: {100*good/(good+bad+neutral)} %<br />
     </div>
   )
 
