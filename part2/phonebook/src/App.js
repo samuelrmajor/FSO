@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 
 const PersonForm = ({addContact, newName, handleNameChange, newNumber, handleNumberChange}) => {
@@ -65,11 +66,21 @@ const Contact = ({name, number}) => {
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: "6782742593" }
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchedName, setSearchedName] = useState('')
+
+
+
+  useEffect(() => {
+  axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      setPersons(response.data)
+    })
+}, [])
+
 
   const addContact = (event) =>{
     
@@ -103,7 +114,7 @@ const App = () => {
 
   }
 
-    const personsToShow = searchedName == ""
+    const personsToShow = searchedName === ""
       ? persons
       : persons.filter(person => person.name.toUpperCase().includes(searchedName.toUpperCase()))
 
