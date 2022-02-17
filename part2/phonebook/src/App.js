@@ -24,6 +24,52 @@ const PersonForm = ({addContact, newName, handleNameChange, newNumber, handleNum
   )
 }
 
+const Notification = ({ type, message }) => {
+
+  
+
+  if (message === null) {
+    return null
+  }
+  else if (type === "error") {
+
+   const styles = {
+  color: "red",
+  background: "lightgrey",
+  fontSize: 20,
+  borderStyle: "solid",
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10
+}
+
+  
+  return (
+    <div style = {styles}>
+      {message}
+    </div>
+  )}
+
+  else {
+    const styles = {
+  color: "green",
+  background: "lightgrey",
+  fontSize: 20,
+  borderStyle: "solid",
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10
+}
+    return (
+    <div style ={styles}>
+      {message}
+    </div>
+  )
+  }
+}
+
+
+
 
 const Filter = ({searchedName, handleSearchNameChange}) => {
 
@@ -67,6 +113,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchedName, setSearchedName] = useState('')
+  const [popupMessage, setPopupMessage] = useState(null)
+  const [messageType, setMessageType] = useState(null)
 
   //retrieves data from server
   useEffect(() => {
@@ -96,7 +144,22 @@ const App = () => {
       setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
       setNewName("")
       setNewNumber("")
-        }).catch("WTF you do??")}
+      setPopupMessage(
+          `Successfully updated!`
+        )
+        setMessageType(
+          "success"
+        )
+        setTimeout(() => {
+          setPopupMessage(null)
+          setMessageType(null)
+        }, 5000)
+
+
+
+
+
+        }).catch("Error Adding, already deleted.")}
         
       }
 
@@ -107,6 +170,16 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName("")
         setNewNumber("")
+        setPopupMessage(
+          `Successfully added!`
+        )
+        setMessageType(
+          "success"
+        )
+        setTimeout(() => {
+          setPopupMessage(null)
+          setMessageType(null)
+        }, 5000)
       }))
   }
 
@@ -118,7 +191,19 @@ const App = () => {
       .then(() => {
         setPersons(persons.filter(n=> n.id !==id))
       }
-      )
+      ).catch(error => {
+        setPopupMessage(
+          `Already removed from server!`
+        )
+        setMessageType(
+          "error"
+        )
+        setPersons(persons.filter(n => n.id !== id))
+
+        setTimeout(() => {
+          setPopupMessage(null)
+          setMessageType(null)
+        }, 5000)})
     }
   }
 
@@ -148,8 +233,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter searchedName = {searchedName} handleSearchNameChange = {handleSearchNameChange}/>
       <h2>Add A New</h2>
+      
       <PersonForm addContact = {addContact} newName = {newName} handleNameChange ={handleNameChange} newNumber = {newNumber} handleNumberChange = {handleNumberChange}/>
       <h2>Numbers</h2>
+      <Notification type ={messageType} message = {popupMessage} />
       <ul>
         {personsToShow.map(person =>
         <Contact deleteEntry = {()=>deleteContact(person.id)} key ={person.id} number = {person.number} name = {person.name}/>
