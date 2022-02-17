@@ -23,7 +23,16 @@ const Button = ({country,handleShowButtonClick}) => (
 
 )
 
+const Weather = ({weatherdata}) => {
 
+  return (
+    <div>
+      your mom
+    </div>
+
+  )
+
+}
 const Country = ({country, handleShowButtonClick}) => {
 
   return (
@@ -65,7 +74,8 @@ const Content = ({handleShowButtonClick, countries}) => {
   }
   else if (countries.length=== 1){
     const languagesResult = countries[0].languages
-    // const languagesResult = {bob: "Bobs"}
+
+    
     return(
       <div>
         <h2>{countries[0].name.common}</h2>
@@ -85,9 +95,17 @@ const Content = ({handleShowButtonClick, countries}) => {
         </h2>
       </div>
         <img src={countries[0].flags.png} alt="alternatetext"></img>
+        
+
+
+        
+
+
       </div>
+
+
     )
-  }
+    }
 
   else if (countries.length <=10){
     return (
@@ -148,7 +166,7 @@ const App = () => {
   }
 
   const handleShowButtonClick = ({country}) =>{
-    console.log(country)
+
     setSearchedName(country.target.name)
   }
 
@@ -157,7 +175,7 @@ const App = () => {
     const countriesToShow = searchedName === ""
       ? countries
       : countries.filter(country => country.name.common.toUpperCase().includes(searchedName.toUpperCase()))
-    console.log(countriesToShow)
+
 
   return (
     <div>
