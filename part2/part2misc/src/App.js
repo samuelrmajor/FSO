@@ -37,7 +37,7 @@ const App = () => {
   ) 
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
-
+  
   useEffect(() => {
     noteService
       .getAll()
