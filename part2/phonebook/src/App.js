@@ -154,12 +154,23 @@ const App = () => {
           setPopupMessage(null)
           setMessageType(null)
         }, 5000)
+        }).catch( error => {
+        console.log(error)
+        //error.response.data.includes("'name'"))
+          setPopupMessage(
+          error.response.data.error
+        )
+        setMessageType(
+          "error"
+        )
 
+        setTimeout(() => {
+          setPopupMessage(null)
+          setMessageType(null)
+        }, 5000)
+      }
 
-
-
-
-        }).catch("Error Adding, already deleted.")}
+      )}
         
       }
 
@@ -180,7 +191,23 @@ const App = () => {
           setPopupMessage(null)
           setMessageType(null)
         }, 5000)
-      }))
+      }).catch( error => {
+        console.log(error)
+        //error.response.data.includes("'name'"))
+          setPopupMessage(
+          error.response.data.error
+        )
+        setMessageType(
+          "error"
+        )
+
+        setTimeout(() => {
+          setPopupMessage(null)
+          setMessageType(null)
+        }, 5000)
+      }
+
+      ))
   }
 
   const deleteContact = (id) => {
@@ -192,6 +219,7 @@ const App = () => {
         setPersons(persons.filter(n=> n.id !==id))
       }
       ).catch(error => {
+        console.log(error)
         setPopupMessage(
           `Already removed from server!`
         )
