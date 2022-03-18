@@ -39,10 +39,10 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   
   useEffect(() => {
-    noteService
-      .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
+    axios
+      .get('/api/notes')
+      .then(res => {
+        setNotes(res.data)
       })
   }, [])
 
@@ -54,15 +54,15 @@ const App = () => {
     .update(id, changedNote).then(returnedNote => {
       setNotes(notes.map(note => note.id !== id ? note : returnedNote))
     })
-    .catch(error => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      setNotes(notes.filter(n => n.id !== id))
-    })
+    // .catch(error => {
+    //     setErrorMessage(
+    //       `Note '${note.content}' was already removed from server`
+    //     )
+    //     setTimeout(() => {
+    //       setErrorMessage(null)
+    //     }, 5000)
+    //   setNotes(notes.filter(n => n.id !== id))
+    // })
 }
 
   const addNote = (event) => {

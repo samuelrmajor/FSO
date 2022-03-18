@@ -3,6 +3,15 @@ const app = express()
 
 app.use(express.json())
 
+const cors = require('cors')
+
+app.use(cors())
+
+
+
+
+
+
 
 let notes = [
   {
@@ -24,6 +33,24 @@ let notes = [
     important: true
   }
 ]
+
+
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+
+app.use(requestLogger)
+
+
+
+
+
+
+
 
 app.get('/api/notes/:id', (request, response) => {
   const id = Number(request.params.id)
@@ -55,10 +82,7 @@ app.get('/api/notes', (request, response) => {
   response.json(notes)
 })
 
-const PORT = 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+
 
 
 const generateId = () => {
@@ -87,4 +111,18 @@ app.post('/api/notes', (request, response) => {
   notes = notes.concat(note)
 
   response.json(note)
+})
+
+
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
