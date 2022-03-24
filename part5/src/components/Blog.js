@@ -34,6 +34,7 @@ const Blog = ({ blog, handleDeleteBlog, userOwnedBool, handleUpdateBlog, loggedI
     Title: {blog.title} <br/>
     Author: {blog.author}<br/>
     Likes: {blog.likes} <button style = {loggedInLike} onClick={likeBlog}>Like</button><br/>
+    Url: {blog.url} <br/>
         <button onClick={toggleVisibility}>Hide</button>
         <button style = {userOwned} onClick={sendDeleteBlog}>Remove</button>
       </div>
