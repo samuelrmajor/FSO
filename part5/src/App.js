@@ -14,13 +14,13 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notifMessage, setNotifMessage] = useState(null)
-  const [notifMessageType, setNotifMessageType] = useState("")
+  const [notifMessageType, setNotifMessageType] = useState('')
 
   //Hooks
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort((a,b)=> b.likes -a.likes))
-    )  
+      setBlogs( blogs.sort((a,b) => b.likes -a.likes))
+    )
   }, [])
 
   useEffect(() => {
@@ -33,10 +33,10 @@ const App = () => {
   }, [])
 
   //Services/Funcs
-    //Logs User in and Saves token locally
+  //Logs User in and Saves token locally
 
 
-  const handleLogin = async ({username,password}) => {
+  const handleLogin = async ({ username,password }) => {
     try {
       const user = await loginService.login({
         username, password,
@@ -45,74 +45,78 @@ const App = () => {
       blogService.setToken(user.token)
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
-      generateNotification({message: 'Login Successful', type: "Succesful Login"})
+      )
+      generateNotification({ message: 'Login Successful', type: 'Succesful Login' })
     } catch (exception) {
-      generateNotification({message: 'Wrong Credentials', type: "error"})
+      generateNotification({ message: 'Wrong Credentials', type: 'error' })
     }
   }
 
-      //Logs user out, deletes token
-    const handleLogout = (event = 0 ) => {
-      if (event) {
-        event.preventDefault()
-      }
-      window.localStorage.removeItem('loggedBlogappUser')
-      setUser(null)
-      setNotifMessageType('LoggedOutSuccessfully')
-      setNotifMessage('Logged Out Successfully')
-      setTimeout(() => {
-        setNotifMessage(null)
-      }, 5000)
-      
+  //Logs user out, deletes token
+  const handleLogout = (event = 0 ) => {
+    if (event) {
+      event.preventDefault()
     }
-      //Generate notification
-    const generateNotification = ({message, type}) => {
-      setNotifMessageType(type)
-        setNotifMessage(message)
-        setTimeout(() => {
-          setNotifMessage(null)
-          }, 5000)
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+    setNotifMessageType('LoggedOutSuccessfully')
+    setNotifMessage('Logged Out Successfully')
+    setTimeout(() => {
+      setNotifMessage(null)
+    }, 5000)
 
+  }
+  //Generate notification
+  const generateNotification = ({ message, type }) => {
+    setNotifMessageType(type)
+    setNotifMessage(message)
+    setTimeout(() => {
+      setNotifMessage(null)
+    }, 5000)
+
+  }
+  //creates new blog
+  const handleNewBlog = async (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    try {
+      const response = await blogService.create(blogObject)
+      setBlogs(blogs.concat({ ...response,user:user.id }))
+      generateNotification({ message: 'Blog Creation Succeeded', type: 'BlogCreationSucceeded' })
+    } catch (error) {
+      generateNotification({ message: 'Blog Creation Failed', type: 'error' })
     }
-        //creates new blog
-    const handleNewBlog = async (blogObject) => {
-      blogFormRef.current.toggleVisibility()
-      try {
-        const response = await blogService.create(blogObject)
-        setBlogs(blogs.concat({...response,user:user.id}))
-        generateNotification({message: 'Blog Creation Succeeded', type: "BlogCreationSucceeded"})
-      } catch {
-        generateNotification({message: 'Blog Creation Failed', type: "error"})
-      }
-    }
-    const blogFormRef = useRef()
+  }
+  const blogFormRef = useRef()
 
 
-      //Deletes Blog
-    const handleDeleteBlog = async (blogObject) => {
-      if (window.confirm("Delete: " + blogObject.title + "?" )) {
+  //Deletes Blog
+  const handleDeleteBlog = async (blogObject) => {
+    if (window.confirm('Delete: ' + blogObject.title + '?' )) {
       try {
         await blogService.deleteBlog(blogObject)
-        setBlogs(blogs.filter(blog=>blog.id !== blogObject.id))
-        generateNotification({message: 'Blog Deletion Succeeded', type: "BlogDeletionSucceeded"})
+        setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+        generateNotification({ message: 'Blog Deletion Succeeded', type: 'BlogDeletionSucceeded' })
       } catch (error) {
-        if (error.response.data.error === "expiredtoken") {
-        generateNotification({message: 'Session Expired', type: "error"})
-        handleLogout()
-      }
-    }}
-    }
+        if (error.response.data.error === 'expiredtoken') {
+          generateNotification({ message: 'Session Expired', type: 'error' })
+          handleLogout()
+        }
+      }}
+  }
 
-      //Updates a Blog
-    const handleUpdateBlog = async (blogObject) => {
-      try {
-        const response = await blogService.update(blogObject)
-        setBlogs(blogs.filter(blog => blog.id !== response.id).concat(response).sort((a,b)=> b.likes-a.likes))
-      } catch {
-        generateNotification({message: 'Blog Like Failed', type: "error"})
-      }
-    }
+  //Updates a Blog
+  const handleUpdateBlog = async (blogObject) => {
+    try {
+      const response = await blogService.update(blogObject)
+      setBlogs(blogs.filter(blog => blog.id !== response.id).concat(response).sort((a,b) => b.likes-a.likes))
+    } catch (error) {
+      if (error.response.data.error === 'expiredtoken') {
+        generateNotification({ message: 'Session Expired', type: 'error' })
+        handleLogout()}
+      else
+      {generateNotification({ message: 'Blog Like Failed', type: 'error' })}
+
+    }}
 
 
 
@@ -122,31 +126,31 @@ const App = () => {
   if (user===null) {
     return (
       <div>
-      <Notification 
+        <Notification
           message={notifMessage}
           type = {notifMessageType}
-      />
-      <h2>Blogs</h2>
-      <Togglable buttonLabel = "Login">
-        <LoginForm
-              handleLogin={handleLogin}
+        />
+        <h2>Blogs</h2>
+        <Togglable buttonLabel = "Login">
+          <LoginForm
+            handleLogin={handleLogin}
           />
-      </Togglable> 
-      <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} handleDeleteBlog = {handleDeleteBlog} userOwnedBool = {false} handleUpdateBlog = {handleUpdateBlog} loggedIn = {false}/>
-        )}
-      </div>
+        </Togglable>
+        <div>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} handleDeleteBlog = {handleDeleteBlog} userOwnedBool = {false} handleUpdateBlog = {handleUpdateBlog} loggedIn = {false}/>
+          )}
+        </div>
       </div>
     )
   }
-  
+
 
   return (
- 
+
     <div>
       <div>
-      <Notification 
+        <Notification
           message={notifMessage}
           type = {notifMessageType} />
       </div>
@@ -157,17 +161,17 @@ const App = () => {
       />
       <Togglable buttonLabel = "New Blog" ref = {blogFormRef}>
         <NewBlogForm
-              handleNewBlog = {handleNewBlog}
+          handleNewBlog = {handleNewBlog}
         />
       </Togglable>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} 
-                blog={blog} 
-                handleDeleteBlog = {handleDeleteBlog} 
-                userOwnedBool = {user.id === blog.user} 
-                handleUpdateBlog = {handleUpdateBlog} 
-                loggedIn = {true} />
+          <Blog key={blog.id}
+            blog={blog}
+            handleDeleteBlog = {handleDeleteBlog}
+            userOwnedBool = {user.id === blog.user}
+            handleUpdateBlog = {handleUpdateBlog}
+            loggedIn = {true} />
         )}
       </div>
     </div>
