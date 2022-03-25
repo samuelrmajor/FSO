@@ -1,7 +1,15 @@
 import { useState, useImperativeHandle, forwardRef } from 'react'
 
 const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false)
+  let defaultVis
+  if (props.buttonLabel === "Login") {
+    defaultVis = true
+  }
+  else {
+    defaultVis = false
+  }
+  
+  const [visible, setVisible] = useState(defaultVis)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }

@@ -33,10 +33,10 @@ const Blog = ({ blog, handleDeleteBlog, userOwnedBool, handleUpdateBlog, loggedI
       <div className = 'blog' style = {blogStyle}>
     Title: {blog.title} <br/>
     Author: {blog.author}<br/>
-    Likes: {blog.likes} <button style = {loggedInLike} onClick={likeBlog}>Like</button><br/>
+    <span className = "blogLikes"> Likes: {blog.likes}</span> <button id = "like-button" style = {loggedInLike} onClick={likeBlog}>Like</button><br/>
     Url: {blog.url} <br/>
         <button onClick={toggleVisibility}>Hide</button>
-        <button style = {userOwned} onClick={sendDeleteBlog}>Remove</button>
+        <button id="remove-blog" style = {userOwned} onClick={sendDeleteBlog}>Remove</button>
       </div>
     )
   }
@@ -44,7 +44,7 @@ const Blog = ({ blog, handleDeleteBlog, userOwnedBool, handleUpdateBlog, loggedI
   else { return (
     <div className = 'blog'>
       {blog.title} {blog.author}
-      <button onClick={toggleVisibility}>Show Details</button>
+      <button className = "showDetails" onClick={toggleVisibility}>Show Details</button>
     </div>
   )
   }

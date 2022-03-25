@@ -41,34 +41,34 @@ describe('<Blog />', () => {
   })
 
 
-    test('renders more content after show details button is pressed', () => {
-      const button = screen.getByText('Show Details')
-      userEvent.click(button)
+  test('renders more content after show details button is pressed', () => {
+    const button = screen.getByText('Show Details')
+    userEvent.click(button)
     expect(button).toBeDefined()
-      const elementlikes = screen.getByText(
+    const elementlikes = screen.getByText(
       '1223', { exact: false }
     )
-      const elementurl = screen.getByText(
+    const elementurl = screen.getByText(
       'testurl', { exact: false }
     )
 
-        expect(elementlikes).toBeDefined()
-        expect(elementurl).toBeDefined()
+    expect(elementlikes).toBeDefined()
+    expect(elementurl).toBeDefined()
 
 
-    })
+  })
 
-    test('the like button is clicked twice and is registered twice', () => {
-      const showDetailsButton = screen.getByText('Show Details')
-      userEvent.click(showDetailsButton)
-      const likeButton = screen.getByText('Like')
-      userEvent.click(likeButton)
-      userEvent.click(likeButton)
+  test('the like button is clicked twice and is registered twice', () => {
+    const showDetailsButton = screen.getByText('Show Details')
+    userEvent.click(showDetailsButton)
+    const likeButton = screen.getByText('Like')
+    userEvent.click(likeButton)
+    userEvent.click(likeButton)
 
-      expect(handleUpdateBlog.mock.calls).toHaveLength(2)
+    expect(handleUpdateBlog.mock.calls).toHaveLength(2)
 
 
 
-    })
+  })
 
 })
