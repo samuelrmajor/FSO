@@ -1,12 +1,15 @@
+import {useSelector} from 'react-redux'
+
 const Notification = () => {
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
+  const notification = useSelector(state=>state.notifications)
+  const style = notification.style
+  const message = notification.message
+  if (style === "none") {
+    return null
   }
   return (
     <div style={style}>
-      render here notification...
+      {message}
     </div>
   )
 }
